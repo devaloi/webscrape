@@ -42,37 +42,37 @@ INTEGRATION_HTML_PAGE2 = """<!DOCTYPE html>
 
 def _make_config(tmp_path, fmt="json", pagination=False):
     output_ext = {"json": "json", "csv": "csv", "sqlite": "db"}[fmt]
-    return load_config_from_dict({
-        "name": "integration-test",
-        "base_url": "https://shop.example.com",
-        "urls": ["https://shop.example.com/items?page=1"],
-        "pagination": {
-            "enabled": pagination,
-            "next_selector": "a.next::attr(href)",
-            "max_pages": 5,
-        },
-        "selectors": {
-            "parser": "css",
-            "items": "div.item",
-            "fields": {
-                "name": "h2.name::text",
-                "price": "span.price::text",
-                "url": "a.link::attr(href)",
+    return load_config_from_dict(
+        {
+            "name": "integration-test",
+            "base_url": "https://shop.example.com",
+            "urls": ["https://shop.example.com/items?page=1"],
+            "pagination": {
+                "enabled": pagination,
+                "next_selector": "a.next::attr(href)",
+                "max_pages": 5,
             },
-        },
-        "rate_limit": {"requests_per_second": 100, "burst": 100},
-        "retry": {"max_attempts": 1, "backoff_base": 0.01, "backoff_max": 0.01},
-        "export": {"format": fmt, "output": str(tmp_path / f"result.{output_ext}")},
-    })
+            "selectors": {
+                "parser": "css",
+                "items": "div.item",
+                "fields": {
+                    "name": "h2.name::text",
+                    "price": "span.price::text",
+                    "url": "a.link::attr(href)",
+                },
+            },
+            "rate_limit": {"requests_per_second": 100, "burst": 100},
+            "retry": {"max_attempts": 1, "backoff_base": 0.01, "backoff_max": 0.01},
+            "export": {"format": fmt, "output": str(tmp_path / f"result.{output_ext}")},
+        }
+    )
 
 
 class TestEndToEndJson:
     @pytest.mark.asyncio
     @respx.mock
     async def test_scrape_to_json(self, tmp_path):
-        respx.get("https://shop.example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
+        respx.get("https://shop.example.com/robots.txt").mock(return_value=httpx.Response(404))
         respx.get("https://shop.example.com/items?page=1").mock(
             return_value=httpx.Response(200, text=INTEGRATION_HTML)
         )
@@ -91,9 +91,7 @@ class TestEndToEndCsv:
     @pytest.mark.asyncio
     @respx.mock
     async def test_scrape_to_csv(self, tmp_path):
-        respx.get("https://shop.example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
+        respx.get("https://shop.example.com/robots.txt").mock(return_value=httpx.Response(404))
         respx.get("https://shop.example.com/items?page=1").mock(
             return_value=httpx.Response(200, text=INTEGRATION_HTML)
         )
@@ -110,9 +108,7 @@ class TestEndToEndSqlite:
     @pytest.mark.asyncio
     @respx.mock
     async def test_scrape_to_sqlite(self, tmp_path):
-        respx.get("https://shop.example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
+        respx.get("https://shop.example.com/robots.txt").mock(return_value=httpx.Response(404))
         respx.get("https://shop.example.com/items?page=1").mock(
             return_value=httpx.Response(200, text=INTEGRATION_HTML)
         )
@@ -131,9 +127,7 @@ class TestEndToEndPagination:
     @pytest.mark.asyncio
     @respx.mock
     async def test_pagination_follows_links(self, tmp_path):
-        respx.get("https://shop.example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
+        respx.get("https://shop.example.com/robots.txt").mock(return_value=httpx.Response(404))
         respx.get("https://shop.example.com/items?page=1").mock(
             return_value=httpx.Response(200, text=INTEGRATION_HTML)
         )
@@ -156,9 +150,7 @@ class TestEndToEndRobotsBlocked:
     @respx.mock
     async def test_robots_blocks_scrape(self, tmp_path):
         respx.get("https://shop.example.com/robots.txt").mock(
-            return_value=httpx.Response(
-                200, text="User-agent: *\nDisallow: /items\n"
-            )
+            return_value=httpx.Response(200, text="User-agent: *\nDisallow: /items\n")
         )
         config = _make_config(tmp_path, fmt="json")
         result = await scrape(config)

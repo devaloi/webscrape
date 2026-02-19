@@ -72,9 +72,7 @@ class TestHttpClient:
     @pytest.mark.asyncio
     @respx.mock
     async def test_max_retries_exceeded(self, rate_limiter, ua_rotator):
-        respx.get("https://example.com/test").mock(
-            return_value=httpx.Response(503, text="Down")
-        )
+        respx.get("https://example.com/test").mock(return_value=httpx.Response(503, text="Down"))
         async with HttpClient(
             rate_limiter, ua_rotator, max_attempts=2, backoff_base=0.01, backoff_max=0.02
         ) as client:

@@ -33,9 +33,7 @@ class TestScraper:
     @pytest.mark.asyncio
     @respx.mock
     async def test_basic_scrape(self, sample_html, tmp_path):
-        respx.get("https://example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
+        respx.get("https://example.com/robots.txt").mock(return_value=httpx.Response(404))
         respx.get("https://example.com/page/1").mock(
             return_value=httpx.Response(200, text=sample_html)
         )
@@ -49,9 +47,7 @@ class TestScraper:
     @pytest.mark.asyncio
     @respx.mock
     async def test_pagination(self, sample_html, sample_html_page2, tmp_path):
-        respx.get("https://example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
+        respx.get("https://example.com/robots.txt").mock(return_value=httpx.Response(404))
         respx.get("https://example.com/page/1").mock(
             return_value=httpx.Response(200, text=sample_html)
         )
@@ -60,7 +56,11 @@ class TestScraper:
         )
         output = str(tmp_path / "out.json")
         config = _make_config(
-            pagination={"enabled": True, "next_selector": "a.next-page::attr(href)", "max_pages": 5},
+            pagination={
+                "enabled": True,
+                "next_selector": "a.next-page::attr(href)",
+                "max_pages": 5,
+            },
             export={"format": "json", "output": output},
         )
         result = await scrape(config)
@@ -71,9 +71,7 @@ class TestScraper:
     @respx.mock
     async def test_robots_blocks_url(self, tmp_path):
         respx.get("https://example.com/robots.txt").mock(
-            return_value=httpx.Response(
-                200, text="User-agent: *\nDisallow: /page/\n"
-            )
+            return_value=httpx.Response(200, text="User-agent: *\nDisallow: /page/\n")
         )
         output = str(tmp_path / "out.json")
         config = _make_config(export={"format": "json", "output": output})
@@ -84,12 +82,8 @@ class TestScraper:
     @pytest.mark.asyncio
     @respx.mock
     async def test_fetch_failure(self, tmp_path):
-        respx.get("https://example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
-        respx.get("https://example.com/page/1").mock(
-            return_value=httpx.Response(500, text="Error")
-        )
+        respx.get("https://example.com/robots.txt").mock(return_value=httpx.Response(404))
+        respx.get("https://example.com/page/1").mock(return_value=httpx.Response(500, text="Error"))
         output = str(tmp_path / "out.json")
         config = _make_config(export={"format": "json", "output": output})
         result = await scrape(config)
@@ -99,9 +93,7 @@ class TestScraper:
     @pytest.mark.asyncio
     @respx.mock
     async def test_csv_export(self, sample_html, tmp_path):
-        respx.get("https://example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
+        respx.get("https://example.com/robots.txt").mock(return_value=httpx.Response(404))
         respx.get("https://example.com/page/1").mock(
             return_value=httpx.Response(200, text=sample_html)
         )
@@ -110,6 +102,7 @@ class TestScraper:
         result = await scrape(config)
         assert result.items_found == 3
         import csv
+
         with open(output, newline="") as f:
             rows = list(csv.DictReader(f))
         assert len(rows) == 3

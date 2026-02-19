@@ -1,6 +1,5 @@
 import pytest
 
-
 SAMPLE_HTML = """<!DOCTYPE html>
 <html>
 <head><title>Test Page</title></head>

@@ -19,7 +19,9 @@ class XPathParser:
                 values = item.xpath(xpath_expr)
                 if values:
                     val = values[0]
-                    row[field_name] = val.strip() if isinstance(val, str) else val.text_content().strip()
+                    row[field_name] = (
+                        val.strip() if isinstance(val, str) else val.text_content().strip()
+                    )
                 else:
                     row[field_name] = ""
             results.append(row)

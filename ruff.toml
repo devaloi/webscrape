@@ -5,5 +5,8 @@ src = ["src"]
 [lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "RUF"]
 
+[lint.per-file-ignores]
+"src/webscrape/useragent.py" = ["E501"]
+
 [format]
 quote-style = "double"

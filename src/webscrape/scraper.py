@@ -113,7 +113,7 @@ async def scrape(config: ScrapeConfig, on_progress: object = None) -> ScrapeResu
                 )
                 items.extend(page_items)
 
-                if on_progress and hasattr(on_progress, "__call__"):
+                if on_progress and callable(on_progress):
                     on_progress(current_url, len(page_items))
 
                 if config.pagination.enabled and config.pagination.next_selector:
@@ -121,10 +121,7 @@ async def scrape(config: ScrapeConfig, on_progress: object = None) -> ScrapeResu
                         next_link = parser.select_one(
                             fetch_result.text, config.pagination.next_selector
                         )
-                        if next_link:
-                            current_url = urljoin(current_url, next_link)
-                        else:
-                            current_url = None
+                        current_url = urljoin(current_url, next_link) if next_link else None
                     else:
                         current_url = None
                 else:

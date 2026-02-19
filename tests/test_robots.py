@@ -61,9 +61,7 @@ class TestRobotsChecker:
     @pytest.mark.asyncio
     @respx.mock
     async def test_fetch_robots_404_allows_all(self):
-        respx.get("https://example.com/robots.txt").mock(
-            return_value=httpx.Response(404)
-        )
+        respx.get("https://example.com/robots.txt").mock(return_value=httpx.Response(404))
         checker = RobotsChecker()
         await checker.fetch_robots("https://example.com/page")
         assert checker.is_allowed("https://example.com/anything") is True

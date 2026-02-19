@@ -29,10 +29,9 @@ class SqliteExporter:
             conn.execute(f'CREATE TABLE IF NOT EXISTS "{self._table_name}" ({col_defs})')
             for row in data:
                 values = [row.get(col, "") for col in columns]
-                conn.execute(
-                    f'INSERT INTO "{self._table_name}" ({", ".join(f"{c!r}" for c in columns)}) VALUES ({placeholders})',
-                    values,
-                )
+                col_names = ", ".join(f'"{c}"' for c in columns)
+                sql = f'INSERT INTO "{self._table_name}" ({col_names}) VALUES ({placeholders})'
+                conn.execute(sql, values)
             conn.commit()
         finally:
             conn.close()

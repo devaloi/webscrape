@@ -8,7 +8,6 @@ from webscrape.export.csv_export import CsvExporter
 from webscrape.export.json_export import JsonExporter
 from webscrape.export.sqlite_export import SqliteExporter
 
-
 SAMPLE_DATA = [
     {"title": "First", "url": "/1"},
     {"title": "Second", "url": "/2"},
@@ -79,9 +78,7 @@ class TestSqliteExporter:
         output = str(tmp_path / "empty.db")
         SqliteExporter().export([], output)
         conn = sqlite3.connect(output)
-        tables = conn.execute(
-            "SELECT name FROM sqlite_master WHERE type='table'"
-        ).fetchall()
+        tables = conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
         conn.close()
         assert len(tables) == 0
 

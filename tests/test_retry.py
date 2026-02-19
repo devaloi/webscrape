@@ -21,7 +21,7 @@ class TestCalculateBackoff:
     def test_backoff_increases(self):
         delays = [calculate_backoff(i, backoff_base=1.0, backoff_max=100.0) for i in range(5)]
         bases = [1.0 * (2**i) for i in range(5)]
-        for delay, base in zip(delays, bases):
+        for delay, base in zip(delays, bases, strict=True):
             assert base <= delay <= base + 1.0
 
     def test_max_cap(self):
