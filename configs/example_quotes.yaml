@@ -1,0 +1,30 @@
+name: quotes
+base_url: https://quotes.toscrape.com
+urls:
+  - https://quotes.toscrape.com/page/1/
+
+pagination:
+  enabled: true
+  next_selector: "li.next a::attr(href)"
+  max_pages: 5
+
+selectors:
+  parser: css
+  items: "div.quote"
+  fields:
+    text: "span.text::text"
+    author: "small.author::text"
+    tags: "div.tags a.tag::text"
+
+rate_limit:
+  requests_per_second: 1
+  burst: 3
+
+retry:
+  max_attempts: 3
+  backoff_base: 1.0
+  backoff_max: 15.0
+
+export:
+  format: json
+  output: ./output/quotes.json

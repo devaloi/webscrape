@@ -1,0 +1,32 @@
+name: products
+base_url: https://example.com/products
+urls:
+  - https://example.com/products?page=1
+
+pagination:
+  enabled: true
+  next_selector: "a.pagination-next::attr(href)"
+  max_pages: 20
+
+selectors:
+  parser: css
+  items: "div.product-card"
+  fields:
+    name: "h3.product-name::text"
+    price: "span.product-price::text"
+    rating: "span.product-rating::text"
+    url: "a.product-link::attr(href)"
+    image: "img.product-image::attr(src)"
+
+rate_limit:
+  requests_per_second: 1
+  burst: 3
+
+retry:
+  max_attempts: 3
+  backoff_base: 2.0
+  backoff_max: 60.0
+
+export:
+  format: csv
+  output: ./output/products.csv

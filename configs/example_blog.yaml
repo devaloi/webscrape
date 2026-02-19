@@ -1,0 +1,35 @@
+name: blog-posts
+base_url: https://example.com/blog
+urls:
+  - https://example.com/blog/page/1
+  - https://example.com/blog/page/2
+
+pagination:
+  enabled: true
+  next_selector: "a.next-page::attr(href)"
+  max_pages: 10
+
+selectors:
+  parser: css
+  items: "article.post"
+  fields:
+    title: "h2.post-title::text"
+    date: "time.post-date::attr(datetime)"
+    summary: "p.post-summary::text"
+    url: "a.post-link::attr(href)"
+
+rate_limit:
+  requests_per_second: 2
+  burst: 5
+
+retry:
+  max_attempts: 3
+  backoff_base: 1.0
+  backoff_max: 30.0
+
+export:
+  format: json
+  output: ./output/blog_posts.json
+
+headers:
+  Accept-Language: "en-US,en;q=0.9"
