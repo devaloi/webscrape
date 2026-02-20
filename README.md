@@ -1,5 +1,7 @@
 # webscrape
 
+[![CI](https://github.com/devaloi/webscrape/actions/workflows/ci.yml/badge.svg)](https://github.com/devaloi/webscrape/actions/workflows/ci.yml)
+
 An async web scraper with httpx, BeautifulSoup parsing, configurable rate limiting, retry with backoff, robots.txt compliance, multiple export formats, and a CLI with rich output.
 
 ## Features

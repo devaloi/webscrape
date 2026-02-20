@@ -8,8 +8,8 @@ version = "0.1.0"
 description = "Async web scraper with httpx, BeautifulSoup, rate limiting, retry, robots.txt compliance, and rich CLI output."
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.13"
-authors = [{ name = "devaloi" }]
+requires-python = ">=3.11"
+authors = [{ name = "Jason Aloi" }]
 
 dependencies = [
     "httpx[http2]>=0.28",
